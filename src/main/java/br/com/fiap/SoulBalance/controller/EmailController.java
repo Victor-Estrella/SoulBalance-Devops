@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/email")
-public class EmailController {
+public class EmailController implements EmailApi {
 
     @Autowired
     EmailService emailService;
@@ -30,10 +30,10 @@ public class EmailController {
         return new ResponseEntity<>(emailEntity, HttpStatus.CREATED);
     }
 
-    @GetMapping
+    @Override
     public ResponseEntity<List<EmailEntity>> getAll() {
-
-        return ResponseEntity.ok(emailService.findAll());
+        List<EmailEntity> emails = emailService.findAll();
+        return ResponseEntity.ok(emails);
     }
 
 }

@@ -10,12 +10,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.web.server.ResponseStatusException;
+
 import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping("/atividade")
-public class AtividadeController {
+public class AtividadeController implements AtividadeApi {
 
     @Autowired
     private AtividadeService atividadeService;
@@ -23,35 +25,32 @@ public class AtividadeController {
 
     @PostMapping()
     public ResponseEntity<AtividadeResponseDto> saveAtividade(@RequestBody @Valid AtividadeRequestDto atividadeRequestDto) {
-
         AtividadeResponseDto response = atividadeService.saveAtividade(atividadeRequestDto);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping("/users/{userId}/{atividadeId}/historico")
     public ResponseEntity<AtividadeResponseDto> buscarHistoricoPorPeriodo(
             @PathVariable Long userId, @PathVariable Long atividadeId) {
-
         AtividadeResponseDto historico = atividadeService.buscarHistoricoPorPeriodo(userId, atividadeId);
+        if (historico == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Atividade não encontrada");
+        }
         return ResponseEntity.ok(historico);
     }
 
-    @GetMapping()
+    @Override
     public ResponseEntity<List<AtividadeResponseDto>> getAll() {
-        List<AtividadeResponseDto> atividadeList = atividadeService.getAll();
-
-        return ResponseEntity.ok(atividadeList);
+        List<AtividadeResponseDto> atividades = atividadeService.getAll();
+        return ResponseEntity.ok(atividades);
     }
 
     @GetMapping("/paginacao")
     public ResponseEntity<Page<AtividadeResponseDto>> findAllPage(
             @RequestParam(value = "pagina", defaultValue = "0") Integer page,
             @RequestParam(value = "tamanho", defaultValue = "2") Integer size) {
-
         PageRequest pageRequest = PageRequest.of(page, size);
-
         Page<AtividadeResponseDto> pageAbrigo = atividadeService.findAllPage(pageRequest);
-
         return ResponseEntity.ok(pageAbrigo);
     }
 

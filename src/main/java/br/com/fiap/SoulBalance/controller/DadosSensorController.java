@@ -3,7 +3,6 @@ package br.com.fiap.SoulBalance.controller;
 import br.com.fiap.SoulBalance.dto.DadosSensorRequestDto;
 import br.com.fiap.SoulBalance.dto.DadosSensorResponseDto;
 import br.com.fiap.SoulBalance.service.DadosSensorService;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,44 +14,35 @@ import java.util.List;
 
 @RestController
 @RequestMapping("dados-sensor")
-public class DadosSensorController {
+public class DadosSensorController implements DadosSensorApi {
 
     @Autowired
     private DadosSensorService dadosSensorService;
 
-    @PostMapping
-    public ResponseEntity<DadosSensorResponseDto> saveDado(@RequestBody @Valid DadosSensorRequestDto filter) {
-
-        DadosSensorResponseDto dadosSensorResponseDto = dadosSensorService.saveDado(filter);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(dadosSensorResponseDto);
+    @Override
+    public ResponseEntity<DadosSensorResponseDto> saveDado(DadosSensorRequestDto filter) {
+        try {
+            DadosSensorResponseDto response = dadosSensorService.saveDado(filter);
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } catch (Exception e) {
+            throw new org.springframework.web.server.ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
     }
 
-    @GetMapping()
+    @Override
     public ResponseEntity<List<DadosSensorResponseDto>> getAllByUsuario() {
-
         List<DadosSensorResponseDto> dados = dadosSensorService.getAll();
-
         return ResponseEntity.ok(dados);
     }
 
-//    @GetMapping("/agregados")
-//    public ResponseEntity<Map<TipoDadoSensor, Double>> agregarDadosDiarios(
-//            @AuthenticationPrincipal UsuarioEntity usuarioLogado,
-//            @RequestParam("data") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate data) {
-//
-//        Map<TipoDadoSensor, Double> agregados = dadosSensorService.agregarDadosDiarios(
-//                usuarioLogado.getId(),
-//                data
-//        );
-//
-//        return ResponseEntity.ok(agregados);
-//    }
-
-    @DeleteMapping("/{idDadoSensor}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long idDadoSensor) {
-        dadosSensorService.delete(idDadoSensor);
+    @Override
+    public ResponseEntity<Void> delete(Long idDadoSensor) {
+        try {
+            dadosSensorService.delete(idDadoSensor);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            throw new org.springframework.web.server.ResponseStatusException(HttpStatus.NOT_FOUND, "ID não encontrado");
+        }
     }
 
     @GetMapping("/paginacao")

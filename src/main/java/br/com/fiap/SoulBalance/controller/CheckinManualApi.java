@@ -27,4 +27,17 @@ public interface CheckinManualApi {
     @ApiResponse(responseCode = "200", description = "Histórico retornado com sucesso")
     @GetMapping("/historico/{idUsuario}")
     ResponseEntity<List<CheckinManualResponseDto>> getAllByUsuario(@PathVariable Long idUsuario);
+
+    @Operation(summary = "Listar todos os check-ins", description = "Retorna todos os check-ins manuais cadastrados.")
+    @ApiResponse(responseCode = "200", description = "Lista de check-ins retornada com sucesso")
+    @GetMapping()
+    ResponseEntity<List<CheckinManualResponseDto>> getAll();
+    
+    @Operation(summary = "Excluir check-in manual", description = "Remove um check-in manual de um usuário pelo ID.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "204", description = "Check-in excluído com sucesso"),
+        @ApiResponse(responseCode = "404", description = "Check-in não encontrado")
+    })
+    @DeleteMapping("/users/{userId}/{chekinId}/chekins")
+    ResponseEntity<Void> deleteChekins(@PathVariable Long userId, @PathVariable Long chekinId);
 }

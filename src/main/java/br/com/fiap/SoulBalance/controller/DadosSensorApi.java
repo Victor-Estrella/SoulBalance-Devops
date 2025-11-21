@@ -27,4 +27,11 @@ public interface DadosSensorApi {
     @ApiResponse(responseCode = "200", description = "Lista de dados retornada com sucesso")
     @GetMapping()
     ResponseEntity<List<DadosSensorResponseDto>> getAllByUsuario();
+    @Operation(summary = "Excluir dado do sensor", description = "Remove um dado de sensor pelo ID.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "204", description = "Dado excluído com sucesso"),
+        @ApiResponse(responseCode = "404", description = "Dado não encontrado")
+    })
+    @DeleteMapping("/{idDadoSensor}")
+    ResponseEntity<Void> delete(@PathVariable Long idDadoSensor);
 }
