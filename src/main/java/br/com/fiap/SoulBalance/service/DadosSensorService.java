@@ -75,6 +75,21 @@ public class DadosSensorService {
         dadosSensorRepository.delete(dadosSensor);
     }
 
+    @Transactional
+    public DadosSensorResponseDto updateDado(DadosSensorRequestDto filter, Long idDadoSensor) {
+        DadosSensorEntity dado = dadosSensorRepository.findById(idDadoSensor)
+                .orElseThrow(NotFoundException.forDadoSensor(idDadoSensor));
+
+        UsuarioEntity usuario = validarUsuario(filter.getEmail());
+        dado.setTipoDado(filter.getTipoDadoSensor());
+        dado.setValor(filter.getValor());
+        dado.setUsuario(usuario);
+        // Não atualiza o time para manter o registro original
+
+        DadosSensorEntity updated = dadosSensorRepository.save(dado);
+        return DadosSensorResponseDto.from(updated);
+    }
+
     private UsuarioEntity validarUsuario(String email) {
         return usuarioRepository.findByEmail(email)
                 .orElseThrow(NotFoundException.forEmail(email));

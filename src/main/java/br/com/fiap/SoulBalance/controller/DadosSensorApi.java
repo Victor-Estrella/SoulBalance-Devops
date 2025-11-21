@@ -23,6 +23,14 @@ public interface DadosSensorApi {
     @PostMapping
     ResponseEntity<DadosSensorResponseDto> saveDado(@RequestBody DadosSensorRequestDto filter);
 
+    @Operation(summary = "Atualizar dado do sensor", description = "Atualiza um dado de sensor existente pelo ID.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Dado atualizado com sucesso"),
+        @ApiResponse(responseCode = "400", description = "Dados inválidos para atualização"),
+        @ApiResponse(responseCode = "404", description = "Dado não encontrado")
+    })
+    @PutMapping("/{idDadoSensor}")
+    ResponseEntity<DadosSensorResponseDto> updateDado(@RequestBody DadosSensorRequestDto filter, @PathVariable Long idDadoSensor);
     @Operation(summary = "Listar dados do sensor", description = "Retorna todos os dados de sensores cadastrados.")
     @ApiResponse(responseCode = "200", description = "Lista de dados retornada com sucesso")
     @GetMapping()

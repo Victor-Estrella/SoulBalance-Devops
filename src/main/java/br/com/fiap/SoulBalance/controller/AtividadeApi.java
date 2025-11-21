@@ -24,6 +24,14 @@ public interface AtividadeApi {
     @PostMapping()
     ResponseEntity<AtividadeResponseDto> saveAtividade(@RequestBody AtividadeRequestDto atividadeRequestDto);
 
+    @Operation(summary = "Atualizar atividade", description = "Atualiza uma atividade existente pelo ID.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Atividade atualizada com sucesso"),
+        @ApiResponse(responseCode = "400", description = "Dados inválidos para atualização"),
+        @ApiResponse(responseCode = "404", description = "Atividade não encontrada")
+    })
+    @PutMapping("/{atividadeId}")
+    ResponseEntity<AtividadeResponseDto> updateAtividade(@RequestBody AtividadeRequestDto atividadeRequestDto, @PathVariable Long atividadeId);
     @Operation(summary = "Buscar histórico de atividade", description = "Retorna o histórico de uma atividade específica de um usuário.")
     @ApiResponse(responseCode = "200", description = "Histórico retornado com sucesso")
     @GetMapping("/users/{userId}/{atividadeId}/historico")

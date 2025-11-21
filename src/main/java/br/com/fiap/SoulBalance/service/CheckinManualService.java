@@ -84,6 +84,25 @@ public class CheckinManualService {
         return checkinManualRepository.deleteByUsuarioIdAndChekinId(userId, chekinId);
     }
 
+        @Transactional
+        @CacheEvict(value = "historicoCheckin")
+        public CheckinManualResponseDto updateChekin(CheckinManualRequestDto filter, Long userId, Long chekinId) {
+        UsuarioEntity usuario = usuarioRepository.findById(userId)
+            .orElseThrow(NotFoundException.forUser(userId));
+
+        CheckinManualEntity checkin = checkinManualRepository.findById(chekinId)
+            .orElseThrow(NotFoundException.forChekin(chekinId));
+
+        checkin.setHumor(filter.getHumor());
+        checkin.setEnergia(filter.getEnergia());
+        checkin.setFoco(filter.getFoco());
+        checkin.setUsuario(usuario);
+        // Não atualiza o time para manter o registro original
+
+        CheckinManualEntity updated = checkinManualRepository.save(checkin);
+        return CheckinManualResponseDto.from(updated);
+        }
+
 
     private UsuarioEntity validarUsuario(String email) {
         return usuarioRepository.findByEmail(email)

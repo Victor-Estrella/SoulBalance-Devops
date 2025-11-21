@@ -35,6 +35,17 @@ public class CheckinManualController implements CheckinManualApi {
     }
 
     @Override
+    public ResponseEntity<CheckinManualResponseDto> updateChekin(CheckinManualRequestDto filter, Long userId, Long chekinId) {
+        try {
+            // Supondo que exista um método updateChekin na service, se não existir, será necessário implementar
+            CheckinManualResponseDto response = checkinManualService.updateChekin(filter, userId, chekinId);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            throw new org.springframework.web.server.ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+    @Override
     public ResponseEntity<List<CheckinManualResponseDto>> getAllByUsuario(Long idUsuario) {
         List<CheckinManualResponseDto> historico = checkinManualService.getAllByUsuario(idUsuario);
         return ResponseEntity.ok(historico);

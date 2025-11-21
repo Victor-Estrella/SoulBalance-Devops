@@ -30,6 +30,16 @@ public class DadosSensorController implements DadosSensorApi {
     }
 
     @Override
+    public ResponseEntity<DadosSensorResponseDto> updateDado(DadosSensorRequestDto filter, Long idDadoSensor) {
+        try {
+            DadosSensorResponseDto response = dadosSensorService.updateDado(filter, idDadoSensor);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            throw new org.springframework.web.server.ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+    @Override
     public ResponseEntity<List<DadosSensorResponseDto>> getAllByUsuario() {
         List<DadosSensorResponseDto> dados = dadosSensorService.getAll();
         return ResponseEntity.ok(dados);

@@ -83,6 +83,27 @@ public class AtividadeService {
         return duracao.toMinutes();
     }
 
+    @Transactional
+    @CacheEvict(value = "historicoAtividades")
+    public AtividadeResponseDto updateAtividade(AtividadeRequestDto filter, Long atividadeId) {
+        AtividadeEntity atividade = atividadeRepository.findById(atividadeId)
+                .orElseThrow(() -> new NotFoundException("Atividade não encontrada para o ID especificado."));
+
+        if (filter.getInicio().isAfter(filter.getFim())) {
+            throw new IllegalArgumentException("O horário de início deve ser anterior ao horário de fim da atividade.");
+        }
+
+        atividade.setTipoAtividade(filter.getTipoAtividade());
+        atividade.setDescricao(filter.getDescricao());
+        atividade.setDuracaoMinutosAtividade(calcularDuracaoMinutos(filter.getInicio(), filter.getFim()));
+        atividade.setInicio(filter.getInicio());
+        atividade.setFim(filter.getFim());
+        // Usuário não é alterado no update
+
+        AtividadeEntity updated = atividadeRepository.save(atividade);
+        return AtividadeResponseDto.from(updated);
+    }
+
     private UsuarioEntity validarUsuario(String email) {
         return usuarioRepository.findByEmail(email)
                 .orElseThrow(NotFoundException.forEmail(email));

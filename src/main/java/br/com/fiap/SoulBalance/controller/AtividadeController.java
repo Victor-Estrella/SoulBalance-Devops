@@ -29,6 +29,16 @@ public class AtividadeController implements AtividadeApi {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @Override
+    public ResponseEntity<AtividadeResponseDto> updateAtividade(AtividadeRequestDto atividadeRequestDto, Long atividadeId) {
+        try {
+            AtividadeResponseDto response = atividadeService.updateAtividade(atividadeRequestDto, atividadeId);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
     @GetMapping("/users/{userId}/{atividadeId}/historico")
     public ResponseEntity<AtividadeResponseDto> buscarHistoricoPorPeriodo(
             @PathVariable Long userId, @PathVariable Long atividadeId) {
