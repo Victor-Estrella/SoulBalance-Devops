@@ -18,7 +18,8 @@ import java.time.LocalDateTime;
 public class AtividadeEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "atividades")
+    @SequenceGenerator(name = "atividades", sequenceName = "SQ_TB_SOULBALANCE_ATIVIDADES", allocationSize = 1)
     @Column(name = "atividade_id")
     private Long atividadeId;
 

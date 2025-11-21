@@ -18,7 +18,8 @@ import java.time.LocalDateTime;
 public class CheckinManualEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "chekin")
+    @SequenceGenerator(name = "chekin", sequenceName = "SQ_TB_SOULBALANCE_CHEKIN_MANUAL", allocationSize = 1)
     @Column(name = "chekin_id")
     private Long chekinId;
 

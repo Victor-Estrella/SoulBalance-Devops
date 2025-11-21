@@ -17,7 +17,8 @@ import java.time.LocalDateTime;
 public class RecomendacaoEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "recomendacoes")
+    @SequenceGenerator(name = "recomendacoes", sequenceName = "SQ_TB_SOULBALANCE_RECOMENDACAO", allocationSize = 1)
     @Column(name = "recomendacao_id")
     private Long recomendacaoId;
 

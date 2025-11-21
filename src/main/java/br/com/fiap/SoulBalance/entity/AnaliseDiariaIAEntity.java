@@ -18,7 +18,8 @@ import java.time.LocalDateTime;
 public class AnaliseDiariaIAEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "analise_ia")
+    @SequenceGenerator(name = "analise_ia", sequenceName = "SQ_TB_SOULBALANCE_ANALISE_IA", allocationSize = 1)
     @Column(name = "analise_id")
     private Long analiseId;
 

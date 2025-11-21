@@ -19,7 +19,8 @@ import java.time.LocalDateTime;
 public class UsuarioEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "usuario")
+    @SequenceGenerator(name = "usuario", sequenceName = "SQ_TB_SOULBALANCE_USUARIO", allocationSize = 1)
     @Column(name = "user_id")
     private Long id;
 

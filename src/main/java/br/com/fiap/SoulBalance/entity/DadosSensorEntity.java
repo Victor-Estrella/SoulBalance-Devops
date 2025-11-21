@@ -18,7 +18,8 @@ import java.time.LocalDateTime;
 public class DadosSensorEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "dados")
+    @SequenceGenerator(name = "dados", sequenceName = "SQ_TB_SOULBALANCE_DADOS_SENSOR", allocationSize = 1)
     @Column(name = "dado_id")
     private Long dadoId;
 
