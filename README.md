@@ -251,11 +251,7 @@ O script `script_gs.sh` automatiza o provisionamento completo no Azure:
 ```
 
 #### Após o deploy
-Acesse: https://app-pt-rm556206.azurewebsites.net
-
-Login DEV: `admin@email.com` / `admin123`
-
-Logout: `GET /logout`
+Acesse: https://app-pt-rm556206.azurewebsites.net/swagger-ui/index.html
 
 #### Teste rápido de funcionalidade
 1. Acesse `/login` e autentique (criando a conta ou logando com o admin).
