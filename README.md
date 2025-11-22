@@ -2,13 +2,190 @@
 
 SoulBalance é uma aplicação Java Spring Boot para análise, recomendação e acompanhamento de atividades e dados de bem-estar, integrando sensores, check-ins manuais e envio de e-mails.
 
+
+## Macro Arquitetura
+
+
+![Desenho Macro da Arquitetura](./arquitetura.png)
+
+
 ## Funcionalidades
-- Cadastro e autenticação de usuários
-- Registro de atividades e check-ins manuais
-- Coleta de dados de sensores
-- Geração de recomendações automáticas
-- Envio de e-mails
-- Análise diária com IA
+Spring Boot segue o padrão MVC, com controllers REST, services para lógica de negócio e repositórios JPA para persistência. O banco é Azure SQL Server.
+
+## Exemplo de CRUD exposto em JSON (APIs)
+## Tabela de Endpoints
+
+| Recurso         | Método | Endpoint                                      | Descrição                       |
+|-----------------|--------|-----------------------------------------------|----------------------------------|
+| Usuários        | POST   | /usuarios                                     | Criar usuário                    |
+| Usuários        | GET    | /usuarios                                     | Listar todos os usuários         |
+| Usuários        | GET    | /usuarios/{idUsuario}                         | Buscar usuário por ID            |
+| Usuários        | PUT    | /usuarios/{idUsuario}                         | Atualizar usuário                |
+| Usuários        | DELETE | /usuarios/{idUsuario}                         | Excluir usuário                  |
+| Atividades      | POST   | /atividade                                    | Criar atividade                  |
+| Atividades      | GET    | /atividade                                    | Listar todas as atividades       |
+| Atividades      | GET    | /atividade/users/{userId}/{atividadeId}/historico | Buscar histórico de atividade    |
+| Atividades      | PUT    | /atividade/{atividadeId}                      | Atualizar atividade              |
+| Atividades      | DELETE | /atividade/{atividadeId}                      | Excluir atividade                |
+| Checkin Manual  | POST   | /checkin-manual                               | Criar checkin manual             |
+| Checkin Manual  | GET    | /checkin-manual                               | Listar todos os checkins         |
+| Checkin Manual  | GET    | /checkin-manual/historico/{idUsuario}         | Listar checkins por usuário      |
+| Checkin Manual  | PUT    | /checkin-manual/users/{userId}/{chekinId}     | Atualizar checkin manual         |
+| Checkin Manual  | DELETE | /checkin-manual/users/{userId}/{chekinId}/chekins | Excluir checkin manual           |
+| Dados Sensor    | POST   | /dados-sensor                                 | Criar dado de sensor             |
+| Dados Sensor    | GET    | /dados-sensor                                 | Listar todos os dados de sensor  |
+| Dados Sensor    | PUT    | /dados-sensor/{idDadoSensor}                  | Atualizar dado de sensor         |
+| Dados Sensor    | DELETE | /dados-sensor/{idDadoSensor}                  | Excluir dado de sensor           |
+| Login           | POST   | /login                                        | Autenticar usuário (JWT)         |
+| E-mail          | POST   | /email/enviar-email                           | Enviar e-mail                    |
+| E-mail          | GET    | /email                                        | Listar e-mails enviados          |
+
+### Usuários
+**POST /usuarios**
+```json
+{
+   "name": "João Silva",
+   "email": "joao@email.com",
+   "senha": "123456"
+}
+```
+
+**GET /usuarios**
+```json
+[
+   {
+      "userId": 1,
+      "nome": "João Silva",
+      "email": "joao@email.com",
+      "dataCriacao": "2025-11-22T10:00:00"
+   }
+]
+```
+
+**PUT /usuarios/{idUsuario}**
+```json
+{
+   "name": "João S. Silva",
+   "email": "joao@email.com",
+   "senha": "novaSenha"
+}
+```
+
+**DELETE /usuarios/{idUsuario}**
+
+---
+
+### Atividades
+**POST /atividade**
+```json
+{
+   "tipoAtividade": "EXERCICIO_FISICO",
+   "inicio": "2025-11-22T08:00:00",
+   "fim": "2025-11-22T09:00:00",
+   "descricao": "Corrida matinal",
+   "email": "joao@email.com"
+}
+```
+
+**GET /atividade**
+```json
+[
+   {
+      "atividadeId": 1,
+      "tipoAtividade": "EXERCICIO_FISICO",
+      "descricao": "Corrida matinal",
+      "duracaoMinutosAtividade": 60,
+      "usuarioId": 1
+   }
+]
+```
+
+**PUT /atividade/{atividadeId}**
+```json
+{
+   "tipoAtividade": "EXERCICIO_FISICO",
+   "inicio": "2025-11-22T08:30:00",
+   "fim": "2025-11-22T09:30:00",
+   "descricao": "Corrida ajustada",
+   "email": "joao@email.com"
+}
+```
+
+**DELETE /atividade/{atividadeId}**
+
+---
+
+### Checkin Manual
+**POST /checkin-manual**
+```json
+{
+   "humor": "ALTO",
+   "energia": "MEDIO",
+   "foco": "BAIXO",
+   "email": "joao@email.com"
+}
+```
+
+**GET /checkin-manual**
+```json
+[
+   {
+      "chekinId": 1,
+      "humor": "ALTO",
+      "energia": "MEDIO",
+      "foco": "BAIXO",
+      "usuario": "joao@email.com"
+   }
+]
+```
+
+**PUT /checkin-manual/users/{userId}/{chekinId}**
+```json
+{
+   "humor": "MEDIO",
+   "energia": "ALTO",
+   "foco": "ALTO",
+   "email": "joao@email.com"
+}
+```
+
+**DELETE /checkin-manual/users/{userId}/{chekinId}/chekins**
+
+---
+
+### Dados Sensor
+**POST /dados-sensor**
+```json
+{
+   "tipoDadoSensor": "SONO_HORAS",
+   "valor": 7,
+   "email": "joao@email.com"
+}
+```
+
+**GET /dados-sensor**
+```json
+[
+   {
+      "dadoId": 1,
+      "tipoDado": "SONO_HORAS",
+      "valor": 7,
+      "time": "2025-11-22T07:00:00",
+      "usuarioId": 1
+   }
+]
+```
+
+**PUT /dados-sensor/{idDadoSensor}**
+```json
+{
+   "tipoDadoSensor": "SONO_HORAS",
+   "valor": 8,
+   "email": "joao@email.com"
+}
+```
+
+**DELETE /dados-sensor/{idDadoSensor}**
 
 ## Estrutura do Projeto
 ```
@@ -123,6 +300,3 @@ Os testes estão localizados em `src/test/java/br/com/fiap/SoulBalance/`.
 - Java 17
 - Maven
 - Azure CLI (para provisionamento)
-
-## Licença
-MIT
